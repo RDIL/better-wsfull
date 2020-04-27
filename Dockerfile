@@ -145,9 +145,7 @@ RUN curl -fsSL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.t
         golang.org/x/tools/gopls@latest && \
     go get -u -v -d github.com/stamblerre/gocode && \
     go build -o $GOPATH/bin/gocode-gomod github.com/stamblerre/gocode && \
-    rm -rf $GOPATH/src && \
-    sudo rm -rf $GOPATH/pkg && \
-    rm -rf /home/gitpod/.cache/go
+    sudo rm -rf $GOPATH/src $GOPATH/pkg /home/gitpod/.cache/go
 # user Go packages
 ENV GOPATH=/workspace/go \
     PATH=/workspace/go/bin:$PATH
@@ -183,20 +181,42 @@ COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
 ENV PATH=$PATH:/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin
 
 USER gitpod
-ENV PATH=$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH
-RUN curl -fsSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash \
-    && { echo; \
-        echo 'eval "$(pyenv init -)"'; \
-        echo 'eval "$(pyenv virtualenv-init -)"'; } >> /home/gitpod/.bashrc.d/60-python \
-    && pyenv update \
-    && pyenv install 3.8.2 \
-    && pyenv global 3.8.2 \
+ENV PATH=/home/gitpod/.local/bin:$PATH
+RUN export GP_PYTHON_VERSION="3.7.7" \
+    && export GP_PYTHON_SHORT_VERSION="3.7" \
+    && sudo apt-get update \
+    && sudo apt-get install -yq libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev \
+    && curl -fsSL https://www.python.org/ftp/python/${GP_PYTHON_VERSION}/Python-${GP_PYTHON_VERSION}.tar.xz -o Python-${GP_PYTHON_VERSION}.tar.xz \
+    && tar xsf Python-${GP_PYTHON_VERSION}.tar.xz \
+    && cd Python-${GP_PYTHON_VERSION} \
+    && ./configure \
+        --enable-optimizations \
+        --enable-shared \
+        --with-lto \
+        --enable-ipv6 \
+        --enable-loadable-sqlite-extensions \
+        --with-ensurepip=install \
+    && sudo make -j 8 \
+    && sudo make install \
+    && sudo ldconfig \
+    && cd .. \
+    && sudo rm -rf Python-${GP_PYTHON_VERSION} Python-${GP_PYTHON_VERSION}.tar.xz \
+    && curl -fsSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+    && sudo python3 get-pip.py \
+    && rm get-pip.py \
+    && sudo python3 -m pip install --upgrade \
+        setuptools wheel virtualenv pipenv pylint rope flake8 \
+        mypy autopep8 pep8 pylama pydocstyle bandit notebook \
+        python-language-server[all]==0.31.9 twine \
+    && sudo mkdir /home/gitpod/.cache \
+    && sudo chown gitpod:gitpod /home/gitpod/.cache \
+    && sudo chown gitpod:gitpod /home/gitpod/.local/lib/python${GP_PYTHON_SHORT_VERSION}/site-packages \
     && python3 -m pip install --upgrade pip \
     && python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
         mypy autopep8 pep8 pylama pydocstyle bandit notebook \
         twine \
-    && sudo rm -rf /tmp/*
+    && sudo rm -rf /tmp/* /var/lib/apt/lists/*
 # Gitpod will automatically add user site under `/workspace` to persist your packages.
 # ENV PYTHONUSERBASE=/workspace/.pip-modules \
 #    PIP_USER=yes
