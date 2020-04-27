@@ -29,8 +29,6 @@ RUN add-apt-repository -y ppa:git-core/ppa \
     && apt-get install -yq git \
     && rm -rf /var/lib/apt/lists/*
 
-### Gitpod user ###
-# '-l': see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod \
     # passwordless sudo for users in the 'sudo' group
     && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
@@ -61,7 +59,6 @@ RUN curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 ### Apache, PHP and Nginx ###
-USER root
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
         apache2 \
         nginx \
@@ -108,7 +105,6 @@ RUN sudo apt-get remove -y cmake \
     && brew install cmake
 
 ### Go ###
-USER gitpod
 ENV GO_VERSION=1.14 \
     GOPATH=$HOME/go-packages \
     GOROOT=$HOME/go
@@ -202,7 +198,6 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
     && sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
         mypy autopep8 pep8 pylama pydocstyle bandit notebook twine \
-    && sudo chown gitpod:gitpod /home/gitpod/.cache/pip \
     && sudo chown gitpod:gitpod /home/gitpod/.local/lib/python${GP_PYTHON_SHORT_VERSION}/site-packages \
     && python3 -m pip install --upgrade pip \
     && python3 -m pip install --upgrade \
@@ -214,7 +209,6 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
 # ENV PYTHONUSERBASE=/workspace/.pip-modules \
 #    PIP_USER=yes
 
-USER gitpod
 RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
     && curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
     && curl -sSL https://get.rvm.io | bash -s stable \
