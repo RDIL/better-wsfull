@@ -151,8 +151,6 @@ ENV GOPATH=/workspace/go \
     PATH=/workspace/go/bin:$PATH
 
 ### Java ###
-## Place '.gradle' and 'm2-repository' in /workspace because (1) that's a fast volume, (2) it survives workspace-restarts and (3) it can be warmed-up by pre-builds.
-USER gitpod
 RUN curl -fsSL "https://get.sdkman.io" | bash \
  && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
              && sdk install java 8.0.252.hs-adpt \
@@ -168,7 +166,6 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-USER gitpod
 ENV NODE_VERSION=12.16.2
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
@@ -178,10 +175,8 @@ RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh |
     && echo ". ~/.nvm/nvm-lazy.sh"  >> /home/gitpod/.bashrc.d/50-node
 # above, we are adding the lazy nvm init to .bashrc, because one is executed on interactive shells, the other for non-interactive shells (e.g. plugin-host)
 COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
-ENV PATH=$PATH:/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin
+ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-USER gitpod
-ENV PATH=/home/gitpod/.local/bin:$PATH
 RUN export GP_PYTHON_VERSION="3.7.7" \
     && export GP_PYTHON_SHORT_VERSION="3.7" \
     && sudo apt-get update \
@@ -206,10 +201,8 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
     && rm get-pip.py \
     && sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
-        mypy autopep8 pep8 pylama pydocstyle bandit notebook \
-        python-language-server[all]==0.31.9 twine \
-    && sudo mkdir /home/gitpod/.cache \
-    && sudo chown gitpod:gitpod /home/gitpod/.cache \
+        mypy autopep8 pep8 pylama pydocstyle bandit notebook twine \
+    && sudo chown gitpod:gitpod /home/gitpod/.cache/pip \
     && sudo chown gitpod:gitpod /home/gitpod/.local/lib/python${GP_PYTHON_SHORT_VERSION}/site-packages \
     && python3 -m pip install --upgrade pip \
     && python3 -m pip install --upgrade \
@@ -224,19 +217,17 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
 USER gitpod
 RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
     && curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
-    && curl -fsSL https://get.rvm.io | bash -s stable \
+    && curl -sSL https://get.rvm.io | bash -s stable \
     && bash -lc " \
         rvm requirements \
         && rvm install 2.5 \
         && rvm install 2.6 \
         && rvm use 2.6 --default \
         && rvm rubygems current \
-        && gem install bundler --no-document \
-        && gem install solargraph --no-document" \
-    && echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*' >> /home/gitpod/.bashrc.d/70-ruby
+        && gem install bundler solargraph --no-document" \
+    && echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"' >> /home/gitpod/.bashrc.d/70-ruby
 ENV GEM_HOME=/workspace/.rvm
 
-USER gitpod
 RUN sudo apt-get update \
     && DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
         # Enable Rust static binary builds
@@ -246,8 +237,8 @@ RUN sudo apt-get update \
     && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* /tmp/*
 
-RUN cp /home/gitpod/.profile /home/gitpod/.profile_orig && \
-    curl -fsSL https://sh.rustup.rs | sh -s -- -y \
+RUN cp /home/gitpod/.profile /home/gitpod/.profile_orig \
+    && curl -fsSL https://sh.rustup.rs | sh -s -- -y \
     && .cargo/bin/rustup toolchain install 1.42.0 \
     && .cargo/bin/rustup default 1.42.0 \
     # Save image size by removing now-redudant stable toolchain
