@@ -158,7 +158,7 @@ ENV GOPATH=/workspace/go \
 USER gitpod
 RUN curl -fsSL "https://get.sdkman.io" | bash \
  && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
-             && sdk install java 11.0.6.fx-zulu \
+             && sdk install java 8.0.252.hs-adpt \
              && sdk install gradle \
              && sdk install maven \
              && sdk flush archives \
