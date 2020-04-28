@@ -111,7 +111,6 @@ ENV GO_VERSION=1.14 \
 ENV PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 RUN curl -fsSL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | tar xzs && \
-# install VS Code Go tools from https://github.com/Microsoft/vscode-go/blob/0faec7e5a8a69d71093f08e035d33beb3ded8626/src/goInstallTools.ts#L19-L45
     go get -u -v \
         github.com/mdempsky/gocode \
         github.com/uudashr/gopkgs/cmd/gopkgs \
@@ -192,16 +191,13 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
     && sudo ldconfig \
     && cd .. \
     && sudo rm -rf Python-${GP_PYTHON_VERSION} Python-${GP_PYTHON_VERSION}.tar.xz \
-    && curl -fsSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+    && curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
     && sudo python3 get-pip.py \
     && rm get-pip.py \
     && sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
         mypy autopep8 pep8 pylama pydocstyle bandit notebook twine \
     && sudo rm -rf /tmp/* /var/lib/apt/lists/*
-# Gitpod will automatically add user site under `/workspace` to persist your packages.
-# ENV PYTHONUSERBASE=/workspace/.pip-modules \
-#    PIP_USER=yes
 
 RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
     && curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
@@ -224,9 +220,8 @@ RUN sudo apt-get update \
         musl-tools \
     && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/* /tmp/*
-
-RUN cp /home/gitpod/.profile /home/gitpod/.profile_orig \
-    && curl -fsSL https://sh.rustup.rs | sh -s -- -y \
+    && cp /home/gitpod/.profile /home/gitpod/.profile_orig \
+    && curl -sSL https://sh.rustup.rs | sh -s -- -y \
     && .cargo/bin/rustup toolchain install 1.42.0 \
     && .cargo/bin/rustup default 1.42.0 \
     # Save image size by removing now-redudant stable toolchain
