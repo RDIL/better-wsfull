@@ -198,12 +198,6 @@ RUN export GP_PYTHON_VERSION="3.7.7" \
     && sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
         mypy autopep8 pep8 pylama pydocstyle bandit notebook twine \
-    && sudo chown gitpod:gitpod /home/gitpod/.local/lib/python${GP_PYTHON_SHORT_VERSION}/site-packages \
-    && python3 -m pip install --upgrade pip \
-    && python3 -m pip install --upgrade \
-        setuptools wheel virtualenv pipenv pylint rope flake8 \
-        mypy autopep8 pep8 pylama pydocstyle bandit notebook \
-        twine \
     && sudo rm -rf /tmp/* /var/lib/apt/lists/*
 # Gitpod will automatically add user site under `/workspace` to persist your packages.
 # ENV PYTHONUSERBASE=/workspace/.pip-modules \
