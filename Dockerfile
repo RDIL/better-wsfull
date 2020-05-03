@@ -219,7 +219,7 @@ RUN sudo apt-get update \
         musl-dev \
         musl-tools \
     && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/* /tmp/*
+    && sudo rm -rf /var/lib/apt/lists/* /tmp/* \
     && cp /home/gitpod/.profile /home/gitpod/.profile_orig \
     && curl -sSL https://sh.rustup.rs | sh -s -- -y \
     && .cargo/bin/rustup toolchain install 1.42.0 \
