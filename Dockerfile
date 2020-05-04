@@ -212,28 +212,4 @@ RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
     && echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"' >> /home/gitpod/.bashrc.d/70-ruby
 ENV GEM_HOME=/workspace/.rvm
 
-RUN sudo apt-get update \
-    && DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
-        # Enable Rust static binary builds
-        musl \
-        musl-dev \
-        musl-tools \
-    && sudo apt-get clean \
-    && sudo rm -rf /var/lib/apt/lists/* /tmp/* \
-    && cp /home/gitpod/.profile /home/gitpod/.profile_orig \
-    && curl -sSL https://sh.rustup.rs | sh -s -- -y \
-    && .cargo/bin/rustup toolchain install 1.42.0 \
-    && .cargo/bin/rustup default 1.42.0 \
-    # Save image size by removing now-redudant stable toolchain
-    && .cargo/bin/rustup toolchain uninstall stable \
-    && .cargo/bin/rustup component add \
-        rls \
-        rust-analysis \
-        rust-src \
-    && .cargo/bin/rustup completions bash | sudo tee /etc/bash_completion.d/rustup.bash-completion > /dev/null \
-    && .cargo/bin/rustup target add x86_64-unknown-linux-musl \
-    && grep -v -F -x -f /home/gitpod/.profile_orig /home/gitpod/.profile > /home/gitpod/.bashrc.d/80-rust
-
-RUN bash -lc "cargo install cargo-watch cargo-edit cargo-tree"
-
 USER gitpod
