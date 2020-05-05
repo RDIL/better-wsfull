@@ -175,9 +175,10 @@ ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local
     GP_PYTHON_VERSION="3.7.7" \
     GP_PYTHON_SHORT_VERSION="3.7"
 
+# in the beginning we remove built-in python versions so theia cannot discover them
 RUN sudo rm -rf \
         /bin/python3 \
-        /usr/bin/python3 \ # remove built-in python versions so theia can't discover them
+        /usr/bin/python3 \
         /usr/lib/python3.8 \
     && sudo apt-get update \
     && sudo apt-get install -yq libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev \
