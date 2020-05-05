@@ -170,10 +170,15 @@ RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh |
     && echo ". ~/.nvm/nvm-lazy.sh"  >> /home/gitpod/.bashrc.d/50-node
 # above, we are adding the lazy nvm init to .bashrc, because one is executed on interactive shells, the other for non-interactive shells (e.g. plugin-host)
 COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
-ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-RUN export GP_PYTHON_VERSION="3.7.7" \
-    && export GP_PYTHON_SHORT_VERSION="3.7" \
+ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH \
+    GP_PYTHON_VERSION="3.7.7" \
+    GP_PYTHON_SHORT_VERSION="3.7"
+
+RUN sudo rm -rf \
+        /bin/python3 \
+        /usr/bin/python3 \ # remove built-in python versions so theia can't discover them
+        /usr/lib/python3.8 \
     && sudo apt-get update \
     && sudo apt-get install -yq libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev \
     && curl -fsSL https://www.python.org/ftp/python/${GP_PYTHON_VERSION}/Python-${GP_PYTHON_VERSION}.tar.xz -o Python-${GP_PYTHON_VERSION}.tar.xz \
