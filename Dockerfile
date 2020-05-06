@@ -161,7 +161,7 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=12.16.2
+ENV NODE_VERSION=12.16.3
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
@@ -194,6 +194,7 @@ RUN sudo rm -rf \
         --with-ensurepip=install \
     && sudo make -j 8 \
     && sudo make install \
+    && sudo ldconfig \
     && cd .. \
     && sudo rm -rf Python-${GP_PYTHON_VERSION} Python-${GP_PYTHON_VERSION}.tar.xz \
     && curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
