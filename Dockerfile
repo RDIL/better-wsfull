@@ -194,7 +194,6 @@ RUN sudo rm -rf \
         --with-ensurepip=install \
     && sudo make -j 8 \
     && sudo make install \
-    && sudo ldconfig \
     && cd .. \
     && sudo rm -rf Python-${GP_PYTHON_VERSION} Python-${GP_PYTHON_VERSION}.tar.xz \
     && curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
