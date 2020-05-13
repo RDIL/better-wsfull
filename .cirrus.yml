@@ -1,0 +1,2 @@
+# We leave this empty so that Cirrus doesn't waste time and compute power building the image.
+# That is Docker Hub's job.
