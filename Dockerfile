@@ -1,7 +1,8 @@
 FROM python:3.8.3
 
 ### base ###
-RUN apt-get install -yq \
+RUN apt-get update \
+    && apt-get install -yq \
         zip \
         unzip \
         bash-completion \
