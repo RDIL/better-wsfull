@@ -3,6 +3,7 @@ FROM python:3.8.3
 ### base ###
 RUN apt-get update \
     && apt-get install -yq \
+        git \
         zip \
         unzip \
         bash-completion \
@@ -23,11 +24,6 @@ RUN apt-get update \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENV LANG=en_US.UTF-8
-
-### Git ###
-RUN add-apt-repository -y ppa:git-core/ppa \
-    && apt-get install -yq git \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod \
     # passwordless sudo for users in the 'sudo' group
