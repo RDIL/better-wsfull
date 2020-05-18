@@ -1,8 +1,9 @@
-FROM buildpack-deps:focal
+FROM python:3.8.3
 
 ### base ###
-RUN yes | unminimize \
+RUN apt-get update \
     && apt-get install -yq \
+        git \
         zip \
         unzip \
         bash-completion \
@@ -24,11 +25,6 @@ RUN yes | unminimize \
 
 ENV LANG=en_US.UTF-8
 
-### Git ###
-RUN add-apt-repository -y ppa:git-core/ppa \
-    && apt-get install -yq git \
-    && rm -rf /var/lib/apt/lists/*
-
 RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod \
     # passwordless sudo for users in the 'sudo' group
     && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
@@ -47,7 +43,7 @@ RUN sudo echo "Running 'sudo' for Gitpod: success" && \
 ### Install C/C++ compiler and associated tools ###
 USER root
 RUN curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
-    && echo "deb https://apt.llvm.org/focal/ llvm-toolchain-focal main" >> /etc/apt/sources.list.d/llvm.list \
+    && echo "deb https://apt.llvm.org/buster/ llvm-toolchain-buster main" >> /etc/apt/sources.list.d/llvm.list \
     && apt-get update \
     && apt-get install -yq \
         clang-format \
@@ -135,39 +131,11 @@ RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh |
 # above, we are adding the lazy nvm init to .bashrc, because one is executed on interactive shells, the other for non-interactive shells (e.g. plugin-host)
 COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
 
-ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH \
-    GP_PYTHON_VERSION="3.7.7" \
-    GP_PYTHON_SHORT_VERSION="3.7"
+ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-# in the beginning we remove built-in python versions so theia cannot discover them
-RUN sudo rm -rf \
-        /bin/python3 \
-        /usr/bin/python3 \
-        /usr/lib/python3.8 \
-    && sudo apt-get update \
-    && sudo apt-get install -yq libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev \
-    && curl -fsSL https://www.python.org/ftp/python/${GP_PYTHON_VERSION}/Python-${GP_PYTHON_VERSION}.tar.xz -o Python-${GP_PYTHON_VERSION}.tar.xz \
-    && tar xsf Python-${GP_PYTHON_VERSION}.tar.xz \
-    && cd Python-${GP_PYTHON_VERSION} \
-    && ./configure \
-        --enable-optimizations \
-        --enable-shared \
-        --with-lto \
-        --enable-ipv6 \
-        --enable-loadable-sqlite-extensions \
-        --with-ensurepip=install \
-    && sudo make -j 8 \
-    && sudo make install \
-    && sudo ldconfig \
-    && cd .. \
-    && sudo rm -rf Python-${GP_PYTHON_VERSION} Python-${GP_PYTHON_VERSION}.tar.xz \
-    && curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && sudo python3 get-pip.py \
-    && rm get-pip.py \
-    && sudo python3 -m pip install --upgrade \
+RUN sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pipenv pylint rope flake8 \
-        mypy autopep8 pep8 pylama pydocstyle bandit notebook twine \
-    && sudo rm -rf /tmp/* /var/lib/apt/lists/*
+        mypy autopep8 pep8 pylama pydocstyle bandit notebook twine
 
 RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
     && curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
