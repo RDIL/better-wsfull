@@ -70,8 +70,8 @@ ENV GO_VERSION=1.14 \
     GOROOT=$HOME/go
 ENV PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
-RUN curl -fsSL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | tar xzs && \
-    go get -u -v \
+RUN curl -fsSL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | tar xzs \
+    && go get -u -v \
         github.com/mdempsky/gocode \
         github.com/uudashr/gopkgs/cmd/gopkgs \
         github.com/ramya-rao-a/go-outline \
@@ -95,12 +95,12 @@ RUN curl -fsSL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.t
         github.com/sourcegraph/go-langserver \
         github.com/go-delve/delve/cmd/dlv \
         github.com/davidrjenni/reftools/cmd/fillstruct \
-        github.com/godoctor/godoctor && \
-    GO111MODULE=on go get -u -v \
-        golang.org/x/tools/gopls@latest && \
-    go get -u -v -d github.com/stamblerre/gocode && \
-    go build -o $GOPATH/bin/gocode-gomod github.com/stamblerre/gocode && \
-    sudo rm -rf $GOPATH/src $GOPATH/pkg /home/gitpod/.cache/go
+        github.com/godoctor/godoctor \
+    && GO111MODULE=on go get -u -v \
+        golang.org/x/tools/gopls@latest \
+    && go get -u -v -d github.com/stamblerre/gocode \
+    && go build -o $GOPATH/bin/gocode-gomod github.com/stamblerre/gocode \
+    && sudo rm -rf $GOPATH/src $GOPATH/pkg /home/gitpod/.cache/go
 # user Go packages
 ENV GOPATH=/workspace/go \
     PATH=/workspace/go/bin:$PATH
