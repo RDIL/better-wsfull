@@ -62,7 +62,8 @@ ENV PATH="$PATH:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/"
     INFOPATH="$INFOPATH:/home/linuxbrew/.linuxbrew/share/info" \
     HOMEBREW_NO_AUTO_UPDATE=1
 RUN sudo apt-get remove -y cmake \
-    && brew install cmake
+    && brew install cmake \
+    && brew cleanup
 
 ### Go ###
 ENV GO_VERSION=1.14 \
