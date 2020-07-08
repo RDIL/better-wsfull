@@ -97,16 +97,4 @@ RUN sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pylint rope flake8 twine \
         mypy autopep8 pep8 pylama pydocstyle bandit notebook
 
-RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import - \
-    && curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - \
-    && curl -sSL https://get.rvm.io | bash -s stable \
-    && bash -lc " \
-        rvm requirements \
-        && rvm install 2.6 \
-        && rvm use 2.6 --default \
-        && rvm rubygems current \
-        && gem install bundler solargraph --no-document" \
-    && echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"' >> /home/gitpod/.bashrc.d/70-ruby
-ENV GEM_HOME=/workspace/.rvm
-
 USER gitpod
