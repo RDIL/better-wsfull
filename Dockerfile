@@ -81,7 +81,7 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=12.18.2
+ENV NODE_VERSION=12.18.3
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
@@ -95,6 +95,6 @@ ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local
 
 RUN sudo python3 -m pip install --upgrade \
         setuptools wheel virtualenv pylint rope flake8 twine \
-        mypy autopep8 pep8 pylama pydocstyle bandit notebook
+        mypy pylama pydocstyle bandit notebook
 
 USER gitpod
