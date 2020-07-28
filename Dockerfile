@@ -68,7 +68,7 @@ RUN sudo apt-get remove -y cmake \
 ### Java ###
 RUN curl -fsSL "https://get.sdkman.io" | bash \
  && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
-             && sdk install java 8.0.252.hs-adpt \
+             && sdk install java 8.0.262.hs-adpt \
              && sdk install gradle \
              && sdk install maven \
              && sdk flush archives \
