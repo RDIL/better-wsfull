@@ -1,4 +1,4 @@
-FROM python:3.8.4
+FROM python:3.8.5
 
 ### base ###
 RUN apt-get update \
@@ -13,7 +13,6 @@ RUN apt-get update \
         less \
         locales \
         man-db \
-        nano \
         software-properties-common \
         sudo \
         time \
