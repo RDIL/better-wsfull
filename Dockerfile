@@ -80,7 +80,7 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=12.18.3
+ENV NODE_VERSION=12.18.4
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
