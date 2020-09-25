@@ -1,4 +1,4 @@
-FROM python:3.8.5
+FROM python:3.8.6
 
 ### base ###
 RUN apt-get update \
@@ -45,20 +45,10 @@ RUN apt-get update \
     && apt-get install -yq gdb \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
-### Homebrew ###
-USER gitpod
-RUN mkdir ~/.cache && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-ENV PATH="$PATH:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/" \
-    MANPATH="$MANPATH:/home/linuxbrew/.linuxbrew/share/man" \
-    INFOPATH="$INFOPATH:/home/linuxbrew/.linuxbrew/share/info" \
-    HOMEBREW_NO_AUTO_UPDATE=1
-RUN sudo apt-get remove -y cmake \
-    && brew install cmake \
-    && brew cleanup
-
 ### Java ###
+USER gitpod
 RUN curl -fsSL "https://get.sdkman.io" | bash \
- && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
+    && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
              && sdk install java 8.0.265.hs-adpt \
              && sdk install gradle \
              && sdk install maven \
