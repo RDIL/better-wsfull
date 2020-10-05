@@ -12,13 +12,13 @@ RUN apt-get update \
         jq \
         less \
         locales \
-        man-db \
         software-properties-common \
         sudo \
         time \
         vim \
         multitail \
         lsof \
+        gdb \
     && locale-gen en_US.UTF-8 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
@@ -30,7 +30,8 @@ RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod \
 ENV HOME=/home/gitpod
 WORKDIR $HOME
 # custom Bash prompt
-RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc
+RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc \
+    && echo "unset LC_CTYPE" > ~/.profile
 
 ### Gitpod user (2) ###
 USER gitpod
@@ -38,12 +39,6 @@ USER gitpod
 RUN sudo echo "Running 'sudo' for Gitpod: success" && \
     mkdir /home/gitpod/.bashrc.d && \
     (echo; echo "for i in \$(ls \$HOME/.bashrc.d/*); do source \$i; done"; echo) >> /home/gitpod/.bashrc
-
-### Install C/C++ compiler and associated tools ###
-USER root
-RUN apt-get update \
-    && apt-get install -yq gdb \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 ### Java ###
 USER gitpod
