@@ -16,7 +16,6 @@ RUN apt-get update \
         sudo \
         time \
         vim \
-        multitail \
         lsof \
         gdb \
     && locale-gen en_US.UTF-8 \
