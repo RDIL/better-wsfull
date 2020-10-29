@@ -43,7 +43,7 @@ RUN sudo echo "Running 'sudo' for Gitpod: success" && \
 USER gitpod
 RUN curl -fsSL "https://get.sdkman.io" | bash \
     && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
-             && sdk install java 8.0.265.hs-adpt \
+             && sdk install java 8.0.272.hs-adpt \
              && sdk install gradle \
              && sdk install maven \
              && sdk flush archives \
