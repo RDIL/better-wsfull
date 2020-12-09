@@ -57,7 +57,7 @@ ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
 ENV NODE_VERSION=12.20.0
-RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | PROFILE=/dev/null bash \
+RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
         && nvm alias default $NODE_VERSION \
