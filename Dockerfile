@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:3.8.7
 
 ### base ###
 RUN apt-get update \
