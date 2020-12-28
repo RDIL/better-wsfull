@@ -30,7 +30,7 @@ ENV HOME=/home/gitpod
 WORKDIR $HOME
 # custom Bash prompt
 RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc \
-    && echo "unset LC_CTYPE" > ~/.profile
+    && echo "unset LC_CTYPE" >> ~/.profile
 
 ### Gitpod user (2) ###
 USER gitpod
