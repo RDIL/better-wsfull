@@ -17,7 +17,6 @@ RUN apt-get update \
         time \
         vim \
         lsof \
-        gdb \
     && locale-gen en_US.UTF-8 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
