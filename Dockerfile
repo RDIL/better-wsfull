@@ -55,7 +55,7 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=14.15.4
+ENV NODE_VERSION=14.15.5
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
