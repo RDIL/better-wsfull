@@ -2,6 +2,7 @@ FROM python:3.9.2
 
 ### base ###
 RUN apt-get update \
+    && apt-get upgrade -y \
     && apt-get install -yq \
         git \
         zip \
