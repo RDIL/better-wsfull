@@ -1,9 +1,9 @@
 FROM python:3.9.2
 
 ### base ###
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -yq \
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -yq \
         git \
         zip \
         unzip \
@@ -19,7 +19,7 @@ RUN apt-get update \
         vim \
         lsof \
     && locale-gen en_US.UTF-8 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
+    && apt clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENV LANG=en_US.UTF-8
 
@@ -68,6 +68,6 @@ COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
 
 ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy pylama pydocstyle bandit
+RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy pydocstyle bandit
 
 USER gitpod
