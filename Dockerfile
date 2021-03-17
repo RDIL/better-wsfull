@@ -68,6 +68,6 @@ COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
 
 ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy pylama pydocstyle bandit
+RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy pydocstyle bandit
 
 USER gitpod
