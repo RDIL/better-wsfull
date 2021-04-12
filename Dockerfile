@@ -1,4 +1,4 @@
-FROM python:3.9.2
+FROM python:3.9.4
 
 ### base ###
 RUN apt update \
@@ -56,8 +56,8 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=14.16.0
-RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | PROFILE=/dev/null bash \
+ENV NODE_VERSION=14.16.1
+RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
         && nvm alias default $NODE_VERSION \
