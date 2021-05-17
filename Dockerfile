@@ -43,7 +43,7 @@ RUN sudo echo "Running 'sudo' for Gitpod: success" && \
 USER gitpod
 RUN curl -fsSL "https://get.sdkman.io" | bash \
     && bash -c ". /home/gitpod/.sdkman/bin/sdkman-init.sh \
-             && sdk install java 8.0.282.hs-adpt \
+             && sdk install java 8.0.292.hs-adpt \
              && sdk install gradle \
              && sdk install maven \
              && sdk flush archives \
@@ -56,7 +56,7 @@ RUN curl -fsSL "https://get.sdkman.io" | bash \
 ENV GRADLE_USER_HOME=/workspace/.gradle/
 
 ### Node.js ###
-ENV NODE_VERSION=14.16.1
+ENV NODE_VERSION=16.1.0
 RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | PROFILE=/dev/null bash \
     && bash -c ". .nvm/nvm.sh \
         && nvm install $NODE_VERSION \
@@ -68,6 +68,6 @@ COPY --chown=gitpod:gitpod nvm-lazy.sh /home/gitpod/.nvm/nvm-lazy.sh
 
 ENV PATH=/home/gitpod/.nvm/versions/node/v${NODE_VERSION}/bin:home/gitpod/.local/bin:$PATH
 
-RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy pydocstyle bandit
+RUN sudo python3 -m pip install --upgrade setuptools wheel virtualenv pylint rope flake8 mypy bandit
 
 USER gitpod
